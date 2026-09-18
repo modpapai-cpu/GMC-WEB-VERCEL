@@ -1,0 +1,14 @@
+{
+  "name": "gmc-admin-otp",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "vercel-build": "echo Vercel build ready"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "firebase-admin": "^13.0.2",
+    "dotenv": "^17.2.2"
+  }
+}

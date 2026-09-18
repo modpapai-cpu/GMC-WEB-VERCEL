@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23050505'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-family='Arial' font-size='42' font-weight='900' fill='%23ff1010'%3EG%3C/text%3E%3C/svg%3E">
+<title>GMC — Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{min-height:100vh;background:#050505;color:#fff;overflow-x:hidden}
+.background{position:fixed;inset:0;z-index:-10;background:radial-gradient(circle at 15% 20%,rgba(255,0,0,.13),transparent 28%),radial-gradient(circle at 85% 75%,rgba(255,0,0,.10),transparent 30%),#050505}
+.grid{position:absolute;inset:0;opacity:.18;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:50px 50px;mask-image:linear-gradient(to bottom,black,transparent)}
+.glow{position:absolute;width:300px;height:300px;border-radius:50%;background:red;filter:blur(150px);opacity:.12}.one{top:5%;left:5%}.two{right:5%;bottom:10%}
+nav{position:fixed;top:0;left:0;width:100%;height:78px;padding:0 7%;display:flex;align-items:center;justify-content:space-between;z-index:10;background:rgba(5,5,5,.72);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,0,0,.14)}
+.logo{color:#fff;text-decoration:none;font-size:21px;font-weight:1000;letter-spacing:1.5px}.nav-links{display:flex;align-items:center;gap:27px}.nav-links a{color:#999;text-decoration:none;font-size:12px;font-weight:800;letter-spacing:.5px}.nav-links a:hover,.nav-links a.active{color:#fff}.nav-links a::after{content:"";display:block;width:0;height:2px;margin-top:8px;background:#ff1111;box-shadow:0 0 10px red;transition:.3s}.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.page{min-height:100vh;padding:135px 20px 70px;display:flex;align-items:center;justify-content:center}.card{width:100%;max-width:430px;padding:38px;border-radius:20px;border:1px solid rgba(255,0,0,.25);background:linear-gradient(145deg,rgba(255,0,0,.08),rgba(255,255,255,.025));backdrop-filter:blur(15px);box-shadow:0 0 60px rgba(255,0,0,.08);animation:in .7s ease}
+@keyframes in{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:none}}
+.icon{width:58px;height:58px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;border-radius:15px;background:rgba(255,0,0,.07);border:1px solid rgba(255,0,0,.22);font-size:26px;box-shadow:0 0 25px rgba(255,0,0,.08)}
+.heading{text-align:center;margin-bottom:25px}.heading span{color:#ff3030;font-size:10px;font-weight:900;letter-spacing:2px}.heading h1{margin-top:9px;font-size:34px}.heading p{margin-top:10px;color:#666;font-size:12px;line-height:1.7}
+.field{margin-bottom:15px}.field label{display:block;margin-bottom:8px;color:#888;font-size:10px;font-weight:800;letter-spacing:1px}.field input{width:100%;padding:13px 14px;border-radius:8px;outline:0;color:#fff;background:rgba(0,0,0,.35);border:1px solid #242424}.field input:focus{border-color:rgba(255,0,0,.55);box-shadow:0 0 18px rgba(255,0,0,.08)}
+button{width:100%;padding:13px;border:1px solid #ff2828;border-radius:8px;color:#fff;background:#e50909;font-size:11px;font-weight:900;cursor:pointer;transition:.25s}button:hover{background:#ff1515;transform:translateY(-2px);box-shadow:0 0 28px rgba(255,0,0,.35)}button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.hidden{display:none}.msg{text-align:center;margin-top:14px;min-height:16px;color:#ff4444;font-size:11px}.success{color:#4cff7a}.back{display:block;text-align:center;margin-top:20px;color:#777;text-decoration:none;font-size:11px}
+.dashboard h2{text-align:center;margin-bottom:12px}.dashboard p{text-align:center;color:#777;font-size:12px;margin-bottom:22px}
+@media(max-width:650px){nav{padding:0 5%}.logo{font-size:15px}.nav-links{gap:9px}.nav-links a{font-size:8px}.page{padding-left:5%;padding-right:5%}.card{padding:30px 22px}}
+body.session-checking .page{
+    visibility:hidden;
+}
+
+body.session-checking nav{
+    visibility:hidden;
+}
+</style>
+</head>
+<body class="session-checking">
+<div class="background"><div class="grid"></div><div class="glow one"></div><div class="glow two"></div></div>
+<nav>
+<a href="first.html" class="logo">GMC</a>
+<div class="nav-links">
+<a href="first.html">HOME</a><a href="product.html">PRODUCTS</a><a href="contact.html">CONTACT</a><a href="admin.html" class="active" title="Admin">🛡</a>
+</div>
+</nav>
+
+<main class="page">
+<section class="card">
+<div class="icon">🛡</div>
+
+<div id="emailStep">
+<div class="heading"><span>GMC CONTROL PANEL</span><h1>ADMIN / RESELLER ACCESS</h1><p>Enter your authorized email. Admins and resellers use email OTP verification.</p></div>
+<div class="field"><label>EMAIL</label><input id="email" type="email" value="" placeholder="Enter admin or reseller email" autocomplete="email"></div>
+<button id="sendBtn" onclick="sendOTP()">SEND OTP</button>
+<div id="emailMsg" class="msg"></div>
+</div>
+
+<div id="otpStep" class="hidden">
+<div class="heading"><span>EMAIL VERIFICATION</span><h1>ENTER OTP</h1><p>Check the email address you entered for your verification code.</p></div>
+<div class="field"><label>6-DIGIT OTP</label><input id="otp" type="text" inputmode="numeric" maxlength="6" placeholder="Enter OTP"></div>
+<button id="verifyBtn" onclick="verifyOTP()">VERIFY OTP</button>
+<div id="otpMsg" class="msg"></div>
+</div>
+
+<div id="dashboard" class="dashboard hidden">
+<div class="heading"><span>VERIFIED</span><h1>ADMIN PANEL</h1></div>
+<p id="welcomeText">Welcome, Admin.</p>
+<button onclick="logout()">LOGOUT</button>
+</div>
+
+<a href="first.html" class="back">← Back to Home</a>
+</section>
+</main>
+
+<script>
+async function post(url,data){
+ const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+ const j=await r.json().catch(()=>({message:"Server error"}));
+ if(!r.ok) throw new Error(j.message||"Request failed");
+ return j;
+}
+async function checkExistingSession(){
+    try{
+        const r = await fetch("/api/site-session", {cache:"no-store", credentials:"same-origin"});
+        const j = await r.json();
+        if(j.authenticated){
+            location.replace(j.type === "reseller" ? "first.html" : "admin-dashboard.html");
+            return;
+        }
+    }catch(e){ console.error("Session check failed:",e); }
+    document.body.classList.remove("session-checking");
+}
+
+checkExistingSession();
+
+async function sendOTP(){
+ const b=document.getElementById("sendBtn"),m=document.getElementById("emailMsg");
+ b.disabled=true;m.textContent="Sending OTP...";
+ try{
+  const email=document.getElementById("email").value.trim().toLowerCase();
+ if(!email){m.textContent="Enter your admin email.";b.disabled=false;return}
+ const j=await post("/api/send-otp",{email});
+  m.className="msg success";m.textContent=j.message;
+  document.getElementById("emailStep").classList.add("hidden");
+  document.getElementById("otpStep").classList.remove("hidden");
+ }catch(e){m.className="msg";m.textContent=e.message;b.disabled=false}
+}
+async function verifyOTP(){
+ const b=document.getElementById("verifyBtn"),m=document.getElementById("otpMsg");
+ const otp=document.getElementById("otp").value.trim();
+ if(!/^\d{6}$/.test(otp)){m.textContent="Enter a valid 6-digit OTP.";return}
+ b.disabled=true;m.textContent="Verifying...";
+ try{
+  const email=document.getElementById("email").value.trim().toLowerCase();
+ const j=await post("/api/verify-otp",{email,otp});
+  m.className="msg success";m.textContent=j.message;
+  setTimeout(() => { location.href = j.role === "reseller" ? "first.html" : "admin-dashboard.html"; }, 250);
+  document.getElementById("otpStep").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+ }catch(e){m.className="msg";m.textContent=e.message;b.disabled=false}
+}
+async function logout(){
+ try{
+  await fetch("/api/auth-logout",{method:"POST",cache:"no-store",credentials:"same-origin"});
+ }catch(e){
+  console.error("Logout error:", e);
+ }finally{
+  location.replace("first.html");
+ }
+}
+</script>
+<div style="text-align:center;padding:24px 18px 28px;border-top:1px solid rgba(255,0,0,.13);color:#555;font-size:10px;line-height:2"><div>© 2026 <span style="color:#ff2525">GMC</span>. All Rights Reserved.</div><div style="display:flex;justify-content:center;align-items:center;gap:10px 28px;flex-wrap:wrap;margin-top:10px"><a href="privacy-policy.html" style="color:#777;text-decoration:none">Privacy Policy</a><a href="terms-conditions.html" style="color:#777;text-decoration:none">Terms &amp; Conditions</a><a href="refund-cancellation.html" style="color:#777;text-decoration:none">Refund &amp; Cancellation</a><a href="shipping-delivery.html" style="color:#777;text-decoration:none">Shipping &amp; Delivery</a></div></div>
+</body>
+</html>

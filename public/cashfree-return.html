@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Payment Processing</title></head>
+<body style="margin:0;background:#fff;color:#555;font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;font-size:14px;">
+<div>Payment completed. Verifying...</div>
+<script>
+(function(){
+  const params=new URLSearchParams(location.search);
+  const orderId=params.get('cashfree_order_id')||'';
+  try{ window.parent.postMessage({type:'GMC_CASHFREE_RETURN',orderId:orderId}, '*'); }catch(e){}
+})();
+</script></body></html>

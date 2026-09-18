@@ -1,0 +1,108 @@
+[
+  {
+    "id": "combo-panel",
+    "icon": "⚡",
+    "tag": "POPULAR",
+    "name": "COMBO PANEL",
+    "description": "Premium combo panel with multiple features and flexible subscription plans.",
+    "plans": [
+      {
+        "label": "1 Week",
+        "price": "₹299"
+      },
+      {
+        "label": "1 Month",
+        "price": "₹849"
+      },
+      {
+        "label": "2 Months",
+        "price": "₹1499"
+      },
+      {
+        "label": "Life Time",
+        "price": "₹3999"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "GET COMBO PANEL",
+        "link": "contact.html"
+      }
+    ],
+    "contentType": "plans",
+    "imageUrl": "",
+    "buyEnabled": true
+  },
+  {
+    "id": "aim-silent",
+    "icon": "🎯",
+    "tag": "PREMIUM",
+    "name": "AIM SILENT",
+    "description": "Premium aim-focused product with multiple subscription options.",
+    "plans": [
+      {
+        "label": "1 Week",
+        "price": "₹299"
+      },
+      {
+        "label": "1 Month",
+        "price": "₹849"
+      },
+      {
+        "label": "2 Months",
+        "price": "₹1499"
+      },
+      {
+        "label": "Life Time",
+        "price": "₹3999"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "GET PRODUCT",
+        "link": "contact.html"
+      },
+      {
+        "text": "RESET HWID",
+        "link": "contact.html"
+      }
+    ],
+    "contentType": "plans",
+    "imageUrl": "",
+    "buyEnabled": true
+  },
+  {
+    "id": "custom-panel",
+    "icon": "💻",
+    "tag": "CUSTOM",
+    "name": "CUSTOM PANEL",
+    "description": "Custom panel solutions with personalized requirements and setup.",
+    "plans": [
+      {
+        "label": "Custom Setup",
+        "price": "CONTACT"
+      },
+      {
+        "label": "Customization",
+        "price": "AVAILABLE"
+      },
+      {
+        "label": "Support",
+        "price": "YES"
+      },
+      {
+        "label": "Lifetime Option",
+        "price": "AVAILABLE"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "CONTACT US",
+        "link": "contact.html"
+      }
+    ],
+    "contentType": "plans",
+    "imageUrl": "",
+    "buyEnabled": false
+  }
+]

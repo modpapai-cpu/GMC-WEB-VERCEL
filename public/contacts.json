@@ -1,0 +1,42 @@
+[
+  {
+    "id": "discord",
+    "icon": "\u25c9",
+    "title": "DISCORD",
+    "description": "Join our official Discord server",
+    "text": "discord.com/users/764062307575398431",
+    "url": "https://discord.com/users/764062307575398431"
+  },
+  {
+    "id": "email",
+    "icon": "\u2709",
+    "title": "EMAIL",
+    "description": "Send us an email anytime",
+    "text": "modpapai@gmail.com",
+    "url": "https://mail.google.com/mail/?view=cm&fs=1&to=modpapai%40gmail.com"
+  },
+  {
+    "id": "instagram",
+    "icon": "\u25ce",
+    "title": "INSTAGRAM",
+    "description": "Follow us for latest updates",
+    "text": "YouTube",
+    "url": "https://www.youtube.com/@GmCLiv"
+  },
+  {
+    "id": "youtube",
+    "icon": "\u25b6",
+    "title": "YOUTUBE",
+    "description": "New content and updates",
+    "text": "YouTube",
+    "url": "https://www.youtube.com/@GmCLiv"
+  },
+  {
+    "id": "telegram",
+    "icon": "\u2708",
+    "title": "TELEGRAM",
+    "description": "Join us for updates",
+    "text": "YouTube",
+    "url": "https://www.youtube.com/@GmCLiv"
+  }
+]

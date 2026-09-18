@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23050505'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-family='Arial' font-size='42' font-weight='900' fill='%23ff1010'%3EG%3C/text%3E%3C/svg%3E">
+<title>GMC — Home</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #050505;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* ================= BACKGROUND ================= */
+
+        .background {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            overflow: hidden;
+            background:
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(255, 0, 0, 0.13),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 85% 75%,
+                    rgba(255, 0, 0, 0.10),
+                    transparent 30%
+                ),
+                #050505;
+        }
+
+        .grid {
+            position: absolute;
+            inset: 0;
+            opacity: .18;
+            background-image:
+                linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: linear-gradient(to bottom, black, transparent);
+        }
+
+        .glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: red;
+            filter: blur(150px);
+            opacity: .12;
+        }
+
+        .glow.one {
+            top: 5%;
+            left: 5%;
+        }
+
+        .glow.two {
+            right: 5%;
+            bottom: 10%;
+        }
+
+        .orb {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            border: 1px solid rgba(255,0,0,.14);
+            border-radius: 50%;
+            animation: rotate 15s linear infinite;
+        }
+
+        .orb.one {
+            left: -180px;
+            top: 15%;
+        }
+
+        .orb.two {
+            right: -180px;
+            bottom: 5%;
+            animation-duration: 22s;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 78px;
+            padding: 0 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+
+            background: rgba(5,5,5,.72);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            border-bottom: 1px solid rgba(255,0,0,.14);
+        }
+
+        .logo {
+            color: white;
+            text-decoration: none;
+            font-size: 21px;
+            font-weight: 1000;
+            letter-spacing: 1.5px;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: #ff1111;
+            text-shadow:
+                0 0 8px red,
+                0 0 20px rgba(255,0,0,.7);
+        }
+
+        /* ================= RUNNING RAINBOW GMC ================= */
+        .hero h1 .rainbow-gmc {
+            display: inline-block;
+            color: transparent;
+            background: linear-gradient(90deg,
+                #ff1a1a 0%, #ff8a00 14%, #ffe600 28%,
+                #24ff4a 42%, #00d9ff 56%, #3975ff 70%,
+                #b83cff 84%, #ff1a1a 100%
+            );
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: gmcRainbow 3.2s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(255,0,0,.35));
+        }
+
+        @keyframes gmcRainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 27px;
+        }
+
+        .nav-links a {
+            position: relative;
+            color: #999;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            transition: .3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #fff;
+        }
+        .admin-link {
+    width: 25px;
+    height: 25px;
+
+    display: inline-flex !important;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-link::after {
+    display: none !important;
+}
+
+.admin-link svg {
+    width: 17px;
+    height: 17px;
+
+    fill: none;
+
+    stroke: #ff1717;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    filter:
+        drop-shadow(
+            0 0 5px
+            rgba(255,0,0,.45)
+        );
+
+    transition: .3s;
+}
+
+.admin-link:hover svg {
+    transform: scale(1.12);
+
+    filter:
+        drop-shadow(
+            0 0 9px
+            rgba(255,0,0,.8)
+        );
+}
+        
+.admin-link{width:25px;height:25px;display:inline-flex!important;align-items:center;justify-content:center}
+.admin-link::after{display:none!important}
+.admin-link svg{width:17px;height:17px;fill:none;stroke:#ff1717;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(255,0,0,.45));transition:.3s}
+.admin-link:hover svg{transform:scale(1.12);filter:drop-shadow(0 0 9px rgba(255,0,0,.8))}
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 0;
+            height: 2px;
+            background: #ff1111;
+            box-shadow: 0 0 10px red;
+            transition: .3s;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 100vh;
+            padding: 150px 7% 80px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 70px;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            animation: heroIn 1s ease forwards;
+        }
+
+        @keyframes heroIn {
+            from {
+                opacity: 0;
+                transform: translateY(35px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .online-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+
+            padding: 9px 15px;
+            margin-bottom: 25px;
+
+            border-radius: 50px;
+            border: 1px solid rgba(255,0,0,.25);
+
+            background: rgba(255,0,0,.06);
+
+            color: #ff3c3c;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #ff1717;
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 8px red,
+                0 0 18px red;
+
+            animation: dotPulse 1.5s infinite;
+        }
+
+        @keyframes dotPulse {
+            0%,100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: .35;
+                transform: scale(.65);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(82px, 14vw, 195px);
+            line-height: .91;
+            letter-spacing: -10px;
+            font-weight: 1000;
+
+            margin-bottom: 27px;
+        }
+
+        .hero h1 .red {
+            color: #ff1717;
+
+            text-shadow:
+                0 0 10px rgba(255,0,0,.8),
+                0 0 35px rgba(255,0,0,.35);
+        }
+
+        .hero p {
+            max-width: 620px;
+
+            color: #888;
+            font-size: 15px;
+            line-height: 1.8;
+
+            margin-bottom: 35px;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        .buttons {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            min-width: 155px;
+
+            padding: 14px 23px;
+
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 8px;
+
+            text-decoration: none;
+
+            font-size: 12px;
+            font-weight: 900;
+
+            transition: .3s;
+        }
+
+        .btn-red {
+            color: white;
+
+            background: #e50909;
+
+            border: 1px solid #ff2828;
+
+            box-shadow:
+                0 0 20px rgba(255,0,0,.18);
+        }
+
+        .btn-red:hover {
+            transform: translateY(-4px);
+
+            background: #ff1515;
+
+            box-shadow:
+                0 0 35px rgba(255,0,0,.45);
+        }
+
+        .btn-dark {
+            color: white;
+
+            background: rgba(255,255,255,.025);
+
+            border: 1px solid #282828;
+        }
+
+        .btn-dark:hover {
+            transform: translateY(-4px);
+
+            border-color: rgba(255,0,0,.5);
+
+            background: rgba(255,0,0,.06);
+        }
+
+        /* ================= HERO CARD ================= */
+
+        .hero-card {
+            width: 390px;
+            flex-shrink: 0;
+
+            padding: 30px;
+
+            border-radius: 20px;
+
+            border: 1px solid rgba(255,0,0,.25);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,0,0,.09),
+                    rgba(255,255,255,.025)
+                );
+
+            backdrop-filter: blur(15px);
+
+            box-shadow:
+                0 0 60px rgba(255,0,0,.08),
+                inset 0 0 30px rgba(255,0,0,.02);
+
+            animation: floating 4s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%,100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 23px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 1000;
+            letter-spacing: 1px;
+        }
+
+        .card-live {
+            color: #ff3030;
+
+            font-size: 9px;
+            font-weight: 900;
+
+            padding: 6px 9px;
+
+            border-radius: 20px;
+
+            border: 1px solid rgba(255,0,0,.25);
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+
+            padding: 16px 0;
+
+            border-bottom: 1px solid #1b1b1b;
+        }
+
+        .feature:last-child {
+            border-bottom: 0;
+        }
+
+        .feature-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border-radius: 10px;
+
+            background: rgba(255,0,0,.07);
+
+            border: 1px solid rgba(255,0,0,.18);
+
+            font-size: 17px;
+        }
+
+        .feature strong {
+            display: block;
+
+            font-size: 13px;
+
+            margin-bottom: 5px;
+        }
+
+        .feature small {
+            color: #666;
+            font-size: 10px;
+        }
+
+        /* ================= SECTION ================= */
+
+        .section {
+            padding: 90px 7%;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-heading span {
+            color: #ff2424;
+
+            font-size: 10px;
+            font-weight: 900;
+
+            letter-spacing: 2px;
+        }
+
+        .section-heading h2 {
+            font-size: 40px;
+            margin-top: 10px;
+        }
+
+        .section-heading p {
+            color: #666;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+
+        /* ================= CARDS ================= */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .service-card {
+            min-height: 220px;
+
+            padding: 27px;
+
+            border-radius: 15px;
+
+            background: rgba(255,255,255,.025);
+
+            border: 1px solid #1b1b1b;
+
+            transition: .35s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+
+            border-color: rgba(255,0,0,.4);
+
+            box-shadow:
+                0 18px 45px rgba(255,0,0,.07);
+        }
+
+        .service-icon {
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: rgba(255,0,0,.07);
+
+            border: 1px solid rgba(255,0,0,.18);
+
+            font-size: 22px;
+
+            margin-bottom: 22px;
+        }
+
+        .service-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .service-card p {
+            color: #666;
+
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        /* ================= CTA ================= */
+
+        .cta {
+            margin: 20px 7% 80px;
+
+            padding: 65px 25px;
+
+            text-align: center;
+
+            border-radius: 20px;
+
+            border: 1px solid rgba(255,0,0,.2);
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(255,0,0,.12),
+                    transparent 65%
+                ),
+                rgba(255,255,255,.02);
+        }
+
+        .cta h2 {
+            font-size: 37px;
+            margin-bottom: 14px;
+        }
+
+        .cta h2 span {
+            color: #ff1717;
+
+            text-shadow:
+                0 0 15px rgba(255,0,0,.35);
+        }
+
+        .cta p {
+            color: #666;
+
+            font-size: 13px;
+
+            margin-bottom: 27px;
+        }
+
+        .cta .buttons {
+            justify-content: center;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            padding: 30px 7%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-top: 1px solid #161616;
+
+            color: #555;
+
+            font-size: 11px;
+        }
+
+        footer .footer-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px 28px;
+            flex-wrap: wrap;
+            margin-left: 28px;
+        }
+
+        footer .footer-links a {
+            color: #777;
+            text-decoration: none;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        footer .footer-links a:hover {
+            color: #ff2929;
+        }
+
+        footer strong {
+            color: #ff2222;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 950px) {
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .buttons {
+                justify-content: center;
+            }
+
+            .hero-card {
+                width: 100%;
+                max-width: 500px;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2,1fr);
+            }
+        }
+
+        @media(max-width: 650px) {
+
+            nav {
+                padding: 0 5%;
+            }
+
+            .logo {
+                font-size: 15px;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .nav-links a {
+                font-size: 9px;
+            }
+
+            .hero {
+                padding-left: 5%;
+                padding-right: 5%;
+            }
+
+            .hero h1 {
+                font-size: 92px;
+                letter-spacing: -5px;
+            }
+
+            .hero p {
+                font-size: 13px;
+            }
+
+            .section {
+                padding: 70px 5%;
+            }
+
+            .section-heading h2 {
+                font-size: 31px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .cta {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+
+            .cta h2 {
+                font-size: 28px;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- BACKGROUND -->
+
+    <div class="background">
+
+        <div class="grid"></div>
+
+        <div class="glow one"></div>
+        <div class="glow two"></div>
+
+        <div class="orb one"></div>
+        <div class="orb two"></div>
+
+    </div>
+
+
+    <!-- NAVBAR -->
+
+    <nav>
+
+        <a href="first.html" class="logo">
+            GMC
+        </a>
+
+        <div class="nav-links">
+
+            <a href="first.html" class="active">
+                HOME
+            </a>
+
+            <a href="product.html">
+                PRODUCTS
+            </a>
+
+            <a href="contact.html">
+                CONTACT
+            </a>
+                        <a href="admin.html"
+   class="admin-link"
+   aria-label="Admin Panel"
+   title="Admin Panel">
+
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+
+        <path d="M12 3l7 3v5.5c0 4.7-3 8.1-7 9.5-4-1.4-7-4.8-7-9.5V6l7-3z"></path>
+
+        <path d="M9.5 12l1.7 1.7 3.5-3.5"></path>
+
+    </svg>
+
+</a>
+        </div>
+
+    </nav>
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="online-badge">
+
+                <span class="dot"></span>
+
+                GMC IS ONLINE
+
+            </div>
+
+
+            <h1>
+
+                <span class="rainbow-gmc">GMC</span>
+
+                <br>
+
+                
+
+            </h1>
+
+
+            <p>
+
+                Welcome to <b style="color:#fff;">GMC</b>.
+                Explore our premium digital services, gaming
+                solutions and community support — all in one place.
+
+            </p>
+
+
+            <div class="buttons">
+
+                <a href="product.html" class="btn btn-red">
+                    VIEW PRODUCTS
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT CARD -->
+
+        <div class="hero-card">
+
+            <div class="card-header">
+
+                <div class="card-title">
+                    GMC
+                </div>
+
+                <div class="card-live">
+                    ● ONLINE
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    ⚡
+                </div>
+
+                <div>
+                    <strong>Premium Services</strong>
+                    <small>High quality digital solutions</small>
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🎮
+                </div>
+
+                <div>
+                    <strong>Gaming Solutions</strong>
+                    <small>Multiple gaming services available</small>
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    💻
+                </div>
+
+                <div>
+                    <strong>PC Services</strong>
+                    <small>Performance & optimization solutions</small>
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    💬
+                </div>
+
+                <div>
+                    <strong>Community Support</strong>
+                    <small>Connect with GMC</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SERVICES -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <span>WHAT WE OFFER</span>
+
+            <h2>GMC SERVICES</h2>
+
+            <p>
+                Explore our available services and solutions.
+            </p>
+
+        </div>
+
+
+        <div class="cards">
+
+            <div class="service-card">
+
+                <div class="service-icon">
+                    🎮
+                </div>
+
+                <h3>
+                    Gaming Services
+                </h3>
+
+                <p>
+                    Explore gaming-related digital services
+                    and solutions available through
+                    GMC.
+                </p>
+
+            </div>
+
+
+            <div class="service-card">
+
+                <div class="service-icon">
+                    💻
+                </div>
+
+                <h3>
+                    PC Services
+                </h3>
+
+                <p>
+                    PC setup, optimization and other
+                    performance-related services.
+                </p>
+
+            </div>
+
+
+            <div class="service-card">
+
+                <div class="service-icon">
+                    📱
+                </div>
+
+                <h3>
+                    Android & iOS
+                </h3>
+
+                <p>
+                    Mobile platform related digital
+                    services and solutions.
+                </p>
+
+            </div>
+
+
+            <div class="service-card">
+
+                <div class="service-icon">
+                    📈
+                </div>
+
+                <h3>
+                    Social Media
+                </h3>
+
+                <p>
+                    Social media promotional services
+                    and digital solutions.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CTA -->
+
+    <section class="cta">
+
+        <h2>
+            Welcome to
+            <span>GMC</span>
+        </h2>
+
+        <p>
+            Check our products, explore services or contact
+            the GMC team.
+        </p>
+
+
+        <div class="buttons">
+
+            <a href="product.html" class="btn btn-red">
+                PRODUCTS
+            </a>
+
+            <a href="contact.html" class="btn btn-dark">
+                CONTACT US
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer><div>© 2026 <strong>GMC</strong>. All Rights Reserved.</div><div class="footer-links"><a href="privacy-policy.html">Privacy Policy</a><a href="terms-conditions.html">Terms &amp; Conditions</a><a href="refund-cancellation.html">Refund &amp; Cancellation</a><a href="shipping-delivery.html">Shipping &amp; Delivery</a></div></footer>
+
+<script>
+(async function(){try{const r=await fetch('/api/site-session',{cache:'no-store',credentials:'same-origin'});const s=await r.json();if(!s.authenticated||s.type!=='reseller')return;document.querySelectorAll('a[href="admin.html"],a.admin-link').forEach(a=>a.style.display='none');const nav=document.querySelector('.nav-links, .nav');if(nav&&!nav.querySelector('#siteLogsLink')){const a=document.createElement('a');a.id='siteLogsLink';a.href='purchase-logs.html';a.textContent='LOGS';a.style.color='#aaa';a.style.textDecoration='none';a.style.fontSize='12px';a.style.fontWeight='800';nav.insertBefore(a,nav.lastElementChild);}document.querySelectorAll('.nav-links, .nav').forEach(n=>{const links=[...n.querySelectorAll('a')];if(links.length){const log=n.querySelector('#siteLogsLink');if(log){log.style.order='50';}}});}catch(e){}})();
+</script>
+</body>
+</html>
+
+<style>
+@media(max-width:700px){
+  footer{flex-direction:column;gap:12px;text-align:center;padding:24px 18px 28px;}
+  footer .footer-links{margin-left:0;gap:10px 22px;}
+}
+</style>

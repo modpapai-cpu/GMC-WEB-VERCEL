@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GMC — Reseller Login</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+body{min-height:100vh;background:#050505;color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.bg{position:fixed;inset:0;background:radial-gradient(circle at 15% 20%,rgba(255,0,0,.13),transparent 28%),radial-gradient(circle at 85% 80%,rgba(255,0,0,.1),transparent 30%),#050505;z-index:-1}.grid{position:absolute;inset:0;opacity:.15;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:50px 50px}
+.card{width:min(430px,calc(100vw - 28px));border:1px solid rgba(255,0,0,.35);border-radius:18px;background:rgba(10,10,10,.94);box-shadow:0 0 60px rgba(255,0,0,.09);padding:30px}
+.logo{font-size:27px;font-weight:1000;letter-spacing:1px}.logo span{color:#ff1616}.eyebrow{color:#ff3030;font-size:10px;font-weight:900;letter-spacing:2px;margin-top:8px}.sub{color:#666;font-size:11px;line-height:1.6;margin:12px 0 24px}.label{display:block;color:#888;font-size:9px;font-weight:900;letter-spacing:1px;margin-bottom:7px}.input{width:100%;padding:13px 14px;background:#050505;border:1px solid #282828;border-radius:8px;color:#fff;outline:0}.input:focus{border-color:#ff3030}.btn{width:100%;margin-top:13px;padding:13px;border:1px solid #ff2222;border-radius:8px;background:#e50909;color:#fff;font-size:11px;font-weight:900;cursor:pointer}.btn:hover{background:#ff1515}.msg{min-height:18px;margin-top:10px;color:#ff4444;font-size:10px}.back{display:block;text-align:center;margin-top:16px;color:#666;text-decoration:none;font-size:10px}.back:hover{color:#fff}.logged{display:none}.logged h2{font-size:18px;margin-bottom:8px}.logged p{font-size:11px;color:#777;line-height:1.6}.logout{background:#101010;border-color:#333;color:#ccc}.logout:hover{background:#151515;border-color:#ff3333;color:#fff}
+</style></head>
+<body><div class="bg"><div class="grid"></div></div>
+<div class="card">
+<div class="logo">GMC <span>RESELLER</span></div><div class="eyebrow">RESELLER ACCESS</div>
+<div id="loginBox"><p class="sub">Reseller login is now available from the GMC Admin icon using your email and OTP.</p><label class="label">RESELLER EMAIL</label><input id="email" class="input" type="email" autocomplete="email" placeholder="reseller@example.com"><div id="msg" class="msg"></div><button id="loginBtn" class="btn">LOGIN AS RESELLER</button></div>
+<div id="loggedBox" class="logged"><h2>Reseller access is active ✓</h2><p id="loggedText"></p><button class="btn" onclick="location.href='product.html'">VIEW MY PRODUCTS</button><button class="btn logout" onclick="logout()">LOGOUT</button></div>
+<a class="back" href="first.html">← BACK TO GMC</a>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+async function check(){try{const r=await fetch('/api/reseller-status',{cache:'no-store'});const d=await r.json();if(d.authenticated){$('loginBox').style.display='none';$('loggedBox').style.display='block';$('loggedText').textContent=`${d.reseller.name} · ${d.reseller.email} · ${Number(d.reseller.discountPercent||0)}% reseller discount`;}}catch(e){}}
+$('loginBtn').addEventListener('click',login);$('email').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
+async function login(){const email=$('email').value.trim().toLowerCase();$('msg').textContent='';if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ $('msg').textContent='Enter a valid reseller email.';return;}$('loginBtn').disabled=true;$('loginBtn').textContent='LOGGING IN...';try{const r=await fetch('/api/reseller-login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.message||'Unable to login.');location.href='product.html';}catch(e){$('msg').textContent=e.message||'Unable to login.';$('loginBtn').disabled=false;$('loginBtn').textContent='LOGIN AS RESELLER';}}
+async function logout(){await fetch('/api/reseller-logout',{method:'POST'}).catch(()=>{});location.reload()}
+check();
+</script></body></html>
