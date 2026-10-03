@@ -1268,7 +1268,7 @@
             }];
         }
 
-        if (product.buyEnabled) {
+        if (product.resellerShowBuy === true) {
             const hasPurchasablePlan = (Array.isArray(product.plans) ? product.plans : []).some(plan => {
                 const mode = plan.credentialMode || "license";
                 if (mode === "off") return false;
@@ -1291,6 +1291,7 @@
 
             const products = await response.json();
             buyProducts = products;
+            resellerBypassPayment = products.some(p => p.resellerBypassPayment === true);
 
             if (!products.length) {
                 container.innerHTML = `
@@ -1365,6 +1366,7 @@
     let buySelectedPlanIndex = -1;
     let buyPurchaseId = "";
     let buyPollTimer = null;
+    let resellerBypassPayment = false;
 
     const buyModal = document.getElementById("buyModal");
     const buyStep1 = document.getElementById("buyStep1");
@@ -1446,7 +1448,7 @@
         buyContinue1.disabled = false;
         buyContinue1.textContent = "CONTINUE";
         buyContinue2.disabled = false;
-        buyContinue2.textContent = "CONTINUE TO PAYMENT";
+        buyContinue2.textContent = resellerBypassPayment ? "GENERATE LICENSE" : "CONTINUE TO PAYMENT";
         if (buyTestPayment) buyTestPayment.hidden = true;
         buyModal.classList.remove("payment-only");
         showBuyStep(1);
@@ -1529,7 +1531,7 @@
         }).join("");
 
         buyContinue2.disabled = !hasAvailable;
-        buyContinue2.textContent = hasAvailable ? "CONTINUE TO PAYMENT" : "OUT OF STOCK";
+        buyContinue2.textContent = hasAvailable ? (resellerBypassPayment ? "GENERATE LICENSE" : "CONTINUE TO PAYMENT") : "OUT OF STOCK";
 
         buyPlanOptions.querySelectorAll(".buy-plan:not([disabled])").forEach(button => {
             button.addEventListener("click", () => {
@@ -1538,7 +1540,7 @@
                 button.classList.add("selected");
                 buyError2.textContent = "";
                 buyContinue2.disabled = false;
-                buyContinue2.textContent = "CONTINUE TO PAYMENT";
+                buyContinue2.textContent = resellerBypassPayment ? "GENERATE LICENSE" : "CONTINUE TO PAYMENT";
             });
         });
 
@@ -1575,6 +1577,48 @@
         buyError2.textContent = "";
         showBuyStep(1);
     });
+
+    async function createResellerBypass() {
+        if (!buyCurrentProduct || buySelectedPlanIndex < 0) {
+            buyError2.textContent = "Please select a package.";
+            return;
+        }
+        if (!confirm("RESELLER PAYMENT BYPASS\n\nNo payment will be collected. A license/account will be issued immediately from reseller stock. Continue?")) return;
+        buyError2.textContent = "";
+        buyContinue2.disabled = true;
+        buyContinue2.textContent = "GENERATING LICENSE...";
+        try {
+            const response = await fetch("/api/payment/reseller-bypass", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                cache: "no-store",
+                body: JSON.stringify({
+                    productId: buyCurrentProduct.id,
+                    planIndex: buySelectedPlanIndex,
+                    name: buyCustomer.name,
+                    email: buyCustomer.email,
+                    phone: buyCustomer.phone
+                })
+            });
+            const data = await response.json().catch(() => ({ message: "Server returned an invalid response." }));
+            if (!response.ok || !data.ok) throw new Error(data.message || `Reseller generation failed (${response.status}).`);
+            buyQrProduct.textContent = data.productName || buyCurrentProduct.name || "—";
+            buyQrPackage.textContent = data.planLabel || "—";
+            buyQrEmail.textContent = data.customerEmail || buyCustomer.email || "—";
+            buyQrAmount.textContent = `₹${Number(data.amount || 0).toLocaleString("en-IN")} · BYPASS`;
+            buyQrStatus.textContent = data.licenseKey ? `LICENSE: ${data.licenseKey}` : (data.account ? `ACCOUNT: ${data.account.username || "Issued"}` : "Credential generated successfully.");
+            buySuccess.hidden = false;
+            const delivery = document.getElementById("buyEmailDeliveryStatus");
+            if (delivery) delivery.textContent = data.emailStatus === "sent" ? "License details have been sent to the customer email." : "License generated. Email delivery is pending.";
+            showBuyStep(3);
+            buyModal.classList.add("payment-only");
+        } catch (error) {
+            buyError2.textContent = error.message || "Unable to generate reseller license.";
+        } finally {
+            buyContinue2.disabled = false;
+            buyContinue2.textContent = "GENERATE LICENSE";
+        }
+    }
 
     async function createCashfreePayment() {
         if (!buyCurrentProduct || buySelectedPlanIndex < 0) {
@@ -1659,11 +1703,14 @@
             showBuyStep(2);
         } finally {
             buyContinue2.disabled = false;
-            buyContinue2.textContent = "CONTINUE TO PAYMENT";
+            buyContinue2.textContent = resellerBypassPayment ? "GENERATE LICENSE" : "CONTINUE TO PAYMENT";
         }
     }
 
-    buyContinue2.addEventListener("click", createCashfreePayment);
+    buyContinue2.addEventListener("click", () => {
+        if (resellerBypassPayment) return createResellerBypass();
+        return createCashfreePayment();
+    });
 
     async function createTestPayment() {
         if (!buyCurrentProduct || buySelectedPlanIndex < 0) {

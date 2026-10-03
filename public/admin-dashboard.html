@@ -128,6 +128,7 @@ nav{height:78px;padding:0 7%;display:flex;align-items:center;justify-content:spa
 <div class="field"><label>RESELLER EMAIL</label><input id="resellerEmail" type="email" placeholder="reseller@example.com"></div>
 <div class="field"><label>DISCOUNT PERCENTAGE</label><input id="resellerDiscount" type="number" min="0" max="100" step="0.01" placeholder="20"></div>
 <div class="field"><label>STATUS</label><select id="resellerActive"><option value="true">ACTIVE</option><option value="false">DISABLED</option></select></div>
+<div class="field"><label>PAYMENT / BUY OPTIONS</label><div style="display:grid;gap:8px;padding:10px;border:1px solid #202020;border-radius:9px;background:#050505"><label style="display:flex;align-items:center;gap:8px;color:#ccc;font-size:10px;letter-spacing:.4px"><input id="resellerBypassPayment" type="checkbox" style="width:auto"> BYPASS PAYMENT — GENERATE LICENSE WITHOUT PAYMENT</label><label style="display:flex;align-items:center;gap:8px;color:#ccc;font-size:10px;letter-spacing:.4px"><input id="resellerShowBuy" type="checkbox" style="width:auto"> SHOW BUY OPTION TO THIS RESELLER</label></div><div class="button-editor-note">These settings apply only to this reseller. Payment bypass is enforced server-side.</div></div>
 <div class="field full"><label>PRODUCTS ASSIGNED TO RESELLER</label><div id="resellerProducts" class="reseller-product-picker"></div><div class="button-editor-note">Only selected products will appear when this reseller logs in. The selected discount will apply to every package of those products.</div></div>
 </div>
 <div id="resellerMsg" class="form-msg"></div>
@@ -303,7 +304,7 @@ function renderResellers(){
         const status=r.active===false?'DISABLED':'ACTIVE';
         const creator = r.createdByEmail || "Legacy / unknown";
         const creatorRole = r.createdByRole === "super" ? "SUPER ADMIN" : "ADMIN";
-        return `<div class="admin-row"><div><div class="role">${esc(status)} · ${Number(r.discountPercent||0)}% OFF</div><div class="email">${esc(r.name||'Reseller')}</div><div style="font-size:9px;color:#777;margin-top:4px">${esc(r.email||'')}</div><div style="font-size:8px;color:#555;margin-top:6px">${names.length?esc(names.join(' • ')):'NO PRODUCTS ASSIGNED'}</div><div style="font-size:8px;color:#888;margin-top:7px">CREATED BY: <span style="color:#bbb">${esc(creator)}</span> <span style="color:#555">(${esc(creatorRole)})</span></div></div><div style="display:flex;flex-direction:column;gap:6px"><button onclick="openResellerEditor('${esc(r.id)}')">EDIT</button><button onclick="removeReseller('${esc(r.id)}')">REMOVE</button></div></div>`;
+        return `<div class="admin-row"><div><div class="role">${esc(status)} · ${Number(r.discountPercent||0)}% OFF · ${r.showBuy===true?'BUY ON':'BUY OFF'} · ${r.bypassPayment===true?'BYPASS ON':'BYPASS OFF'}</div><div class="email">${esc(r.name||'Reseller')}</div><div style="font-size:9px;color:#777;margin-top:4px">${esc(r.email||'')}</div><div style="font-size:8px;color:#555;margin-top:6px">${names.length?esc(names.join(' • ')):'NO PRODUCTS ASSIGNED'}</div><div style="font-size:8px;color:#888;margin-top:7px">CREATED BY: <span style="color:#bbb">${esc(creator)}</span> <span style="color:#555">(${esc(creatorRole)})</span></div></div><div style="display:flex;flex-direction:column;gap:6px"><button onclick="openResellerEditor('${esc(r.id)}')">EDIT</button><button onclick="removeReseller('${esc(r.id)}')">REMOVE</button></div></div>`;
     }).join("");
 }
 function renderResellerProductPicker(selected=[]){
@@ -322,6 +323,8 @@ function openResellerEditor(id=""){
     $("resellerEmail").value=r?.email||"";
     $("resellerDiscount").value=Number(r?.discountPercent||0);
     $("resellerActive").value=r?.active===false?"false":"true";
+    $("resellerBypassPayment").checked=r?.bypassPayment===true;
+    $("resellerShowBuy").checked=r?.showBuy===true;
     renderResellerProductPicker(r?.productIds||[]);
     $("resellerModal").classList.remove("hidden");
 }
@@ -332,6 +335,8 @@ async function saveReseller(){
     const email=$("resellerEmail").value.trim().toLowerCase();
     const discount=Number($("resellerDiscount").value);
     const active=$("resellerActive").value==="true";
+    const bypassPayment=$("resellerBypassPayment").checked;
+    const showBuy=$("resellerShowBuy").checked;
     const productIds=[...document.querySelectorAll(".reseller-product-check:checked")].map(x=>x.value);
     const msg=$("resellerMsg");
     if(!name){msg.textContent="Enter reseller name.";return}
@@ -340,7 +345,7 @@ async function saveReseller(){
     if(!productIds.length){msg.textContent="Select at least one product.";return}
     msg.textContent="Saving...";
     try{
-        const body={name,email,discountPercent:discount,productIds,active};
+        const body={name,email,discountPercent:discount,productIds,active,bypassPayment,showBuy};
         if(id) await api("/api/resellers/"+encodeURIComponent(id),{method:"PUT",body:JSON.stringify(body)});
         else await api("/api/resellers",{method:"POST",body:JSON.stringify(body)});
         closeResellerEditor(); await loadResellers();
