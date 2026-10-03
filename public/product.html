@@ -159,6 +159,11 @@
 .admin-link::after{display:none!important}
 .admin-link svg{width:17px;height:17px;fill:none;stroke:#ff1717;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(255,0,0,.45));transition:.3s}
 .admin-link:hover svg{transform:scale(1.12);filter:drop-shadow(0 0 9px rgba(255,0,0,.8))}
+.admin-link.reseller-logout{position:relative;overflow:visible}
+.admin-link.reseller-logout::before{content:'LOGOUT';position:absolute;right:0;top:30px;opacity:0;pointer-events:none;transform:translateY(-4px);padding:6px 8px;border:1px solid rgba(255,0,0,.35);border-radius:6px;background:#0a0a0a;color:#ff3333;font-size:8px;font-weight:900;letter-spacing:1px;white-space:nowrap;box-shadow:0 8px 25px rgba(0,0,0,.45);transition:.18s ease;z-index:100}
+.admin-link.reseller-logout:hover::before{opacity:1;transform:translateY(0)}
+.admin-link.reseller-logout:hover svg{transform:scale(1.12);filter:drop-shadow(0 0 9px rgba(255,0,0,.8))}
+
 
         .nav-links a::after {
             content: "";
@@ -2052,7 +2057,17 @@
     <footer><div>© 2026 <strong>GMC</strong>. All Rights Reserved.</div><div class="footer-links"><a href="privacy-policy.html">Privacy Policy</a><a href="terms-conditions.html">Terms &amp; Conditions</a><a href="refund-cancellation.html">Refund &amp; Cancellation</a><a href="shipping-delivery.html">Shipping &amp; Delivery</a></div></footer>
 
 <script>
-(async function(){try{const r=await fetch('/api/site-session',{cache:'no-store',credentials:'same-origin'});const s=await r.json();if(!s.authenticated||s.type!=='reseller')return;document.querySelectorAll('a[href="admin.html"],a.admin-link').forEach(a=>a.style.display='none');const nav=document.querySelector('.nav-links, .nav');if(nav&&!nav.querySelector('#siteLogsLink')){const a=document.createElement('a');a.id='siteLogsLink';a.href='purchase-logs.html';a.textContent='LOGS';a.style.color='#aaa';a.style.textDecoration='none';a.style.fontSize='12px';a.style.fontWeight='800';nav.insertBefore(a,nav.lastElementChild);}document.querySelectorAll('.nav-links, .nav').forEach(n=>{const links=[...n.querySelectorAll('a')];if(links.length){const log=n.querySelector('#siteLogsLink');if(log){log.style.order='50';}}});}catch(e){}})();
+(async function(){try{const r=await fetch('/api/site-session',{cache:'no-store',credentials:'same-origin'});const s=await r.json();if(!s.authenticated||s.type!=='reseller')return;document.querySelectorAll('a.admin-link').forEach(a=>{
+  a.href='#';
+  a.setAttribute('aria-label','Logout');
+  a.setAttribute('title','Logout');
+  a.classList.add('reseller-logout');
+  a.onclick=async function(e){
+    e.preventDefault();
+    try{await fetch('/api/reseller-logout',{method:'POST',credentials:'same-origin'});}catch(err){}
+    location.href='first.html';
+  };
+});const nav=document.querySelector('.nav-links, .nav');if(nav&&!nav.querySelector('#siteLogsLink')){const a=document.createElement('a');a.id='siteLogsLink';a.href='purchase-logs.html';a.textContent='LOGS';a.style.color='#aaa';a.style.textDecoration='none';a.style.fontSize='12px';a.style.fontWeight='800';nav.insertBefore(a,nav.lastElementChild);}document.querySelectorAll('.nav-links, .nav').forEach(n=>{const links=[...n.querySelectorAll('a')];if(links.length){const log=n.querySelector('#siteLogsLink');if(log){log.style.order='50';}}});}catch(e){}})();
 </script>
 </body>
 </html>
