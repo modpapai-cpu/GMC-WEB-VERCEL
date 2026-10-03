@@ -975,6 +975,47 @@
 
     
 
+/* ================= RESELLER BYPASS CONFIRMATION ================= */
+.bypass-confirm {
+    position:fixed; inset:0; z-index:10050; display:flex; align-items:center; justify-content:center;
+    padding:20px; box-sizing:border-box; background:rgba(0,0,0,.78); backdrop-filter:blur(10px);
+    opacity:1; transition:opacity .18s ease;
+}
+.bypass-confirm.hidden { display:none; }
+.bypass-confirm-box {
+    width:min(430px,100%); box-sizing:border-box; padding:28px; border-radius:20px;
+    background:linear-gradient(180deg,#151515,#0b0b0b); border:1px solid rgba(255,40,40,.55);
+    box-shadow:0 28px 90px rgba(0,0,0,.85),0 0 45px rgba(255,0,0,.12);
+    transform:translateY(0) scale(1); animation:bypassConfirmIn .18s ease-out;
+}
+@keyframes bypassConfirmIn { from{opacity:0;transform:translateY(8px) scale(.98)} to{opacity:1;transform:none} }
+.bypass-confirm-icon {
+    width:48px;height:48px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;
+    border:1px solid rgba(255,45,45,.7);background:rgba(255,0,0,.08);box-shadow:0 0 24px rgba(255,0,0,.13);
+}
+.bypass-confirm-icon span { color:#ff3333;font-size:24px;font-weight:1000; }
+.bypass-confirm-kicker { text-align:center;color:#ff3434;font-size:9px;font-weight:1000;letter-spacing:1.8px;margin-bottom:7px; }
+.bypass-confirm-box h3 { margin:0;text-align:center;color:#fff;font-size:20px;line-height:1.25;letter-spacing:.2px; }
+.bypass-confirm-text { margin:10px 0 18px;text-align:center;color:#8f8f8f;font-size:11px;line-height:1.65; }
+.bypass-confirm-info { border:1px solid #252525;border-radius:12px;background:#0e0e0e;padding:5px 13px;margin-bottom:12px; }
+.bypass-confirm-info div { display:flex;justify-content:space-between;gap:18px;padding:9px 0;border-bottom:1px solid #1d1d1d;font-size:10px; }
+.bypass-confirm-info div:last-child { border-bottom:0; }
+.bypass-confirm-info span { color:#666;text-transform:uppercase;letter-spacing:.5px; }
+.bypass-confirm-info strong { color:#eee;text-align:right;max-width:68%;overflow-wrap:anywhere; }
+.bypass-confirm-warning { display:flex;gap:9px;align-items:flex-start;padding:10px 11px;border:1px solid rgba(255,180,0,.18);border-radius:10px;background:rgba(255,160,0,.045);color:#9a8c6c;font-size:9px;line-height:1.55;margin-bottom:17px; }
+.bypass-confirm-warning > span { width:15px;height:15px;flex:0 0 15px;border-radius:50%;display:grid;place-items:center;border:1px solid #9a8c6c;font-weight:900;font-size:9px; }
+.bypass-confirm-actions { display:grid;grid-template-columns:1fr 1.45fr;gap:9px; }
+.bypass-confirm-actions button { height:44px;border-radius:10px;cursor:pointer;font-size:10px;font-weight:1000;letter-spacing:.7px;transition:.18s; }
+.bypass-cancel { border:1px solid #292929;background:#101010;color:#888; }
+.bypass-cancel:hover { border-color:#555;color:#fff;background:#151515; }
+.bypass-proceed { border:1px solid #ff2929;background:linear-gradient(180deg,#ef1717,#bd0808);color:#fff;box-shadow:0 8px 22px rgba(255,0,0,.16); }
+.bypass-proceed:hover { background:linear-gradient(180deg,#ff2929,#d40b0b);transform:translateY(-1px); }
+.bypass-proceed:disabled { opacity:.55;cursor:wait;transform:none; }
+@media(max-width:520px){
+    .bypass-confirm{padding:14px}.bypass-confirm-box{padding:22px 18px;border-radius:17px}.bypass-confirm-box h3{font-size:18px}
+    .bypass-confirm-actions{grid-template-columns:1fr 1.35fr}.bypass-confirm-actions button{height:42px;font-size:9px}
+}
+
 /* ================= CASHFREE PAYMENT-ONLY VIEW ================= */
 /* The GMC overlay is the only outer scroll container. The Cashfree iframe
    keeps its own fixed checkout viewport and is never vertically cropped by
@@ -1242,6 +1283,28 @@
         </div>
     </div>
 
+    <!-- RESELLER BYPASS CONFIRMATION -->
+    <div class="bypass-confirm hidden" id="bypassConfirm" aria-hidden="true">
+        <div class="bypass-confirm-box" role="dialog" aria-modal="true" aria-labelledby="bypassConfirmTitle">
+            <div class="bypass-confirm-icon">
+                <span>✓</span>
+            </div>
+            <div class="bypass-confirm-kicker">RESELLER PRIVILEGE</div>
+            <h3 id="bypassConfirmTitle">Generate License Without Payment?</h3>
+            <p class="bypass-confirm-text">Payment will be skipped for this reseller. The selected license/account will be issued immediately from reseller stock.</p>
+            <div class="bypass-confirm-info">
+                <div><span>Product</span><strong id="bypassConfirmProduct">—</strong></div>
+                <div><span>Package</span><strong id="bypassConfirmPackage">—</strong></div>
+                <div><span>Amount</span><strong id="bypassConfirmAmount">—</strong></div>
+            </div>
+            <div class="bypass-confirm-warning"><span>i</span><div>This action does not charge the customer. A stock item will be consumed if generation succeeds.</div></div>
+            <div class="bypass-confirm-actions">
+                <button type="button" class="bypass-cancel" id="bypassConfirmCancel">CANCEL</button>
+                <button type="button" class="bypass-proceed" id="bypassConfirmProceed"><span>✓</span> GENERATE LICENSE</button>
+            </div>
+        </div>
+    </div>
+
     <script>
     function escapeHtml(value) {
         return String(value ?? "")
@@ -1397,6 +1460,39 @@
     const buyQrImage = document.getElementById("buyQrImage");
     const buySuccess = document.getElementById("buySuccess");
     const buyQrWrap = document.getElementById("buyQrWrap");
+    const bypassConfirm = document.getElementById("bypassConfirm");
+    const bypassConfirmProduct = document.getElementById("bypassConfirmProduct");
+    const bypassConfirmPackage = document.getElementById("bypassConfirmPackage");
+    const bypassConfirmAmount = document.getElementById("bypassConfirmAmount");
+    const bypassConfirmCancel = document.getElementById("bypassConfirmCancel");
+    const bypassConfirmProceed = document.getElementById("bypassConfirmProceed");
+    let bypassConfirmResolver = null;
+
+    function closeBypassConfirm(result = false) {
+        if (!bypassConfirm) return;
+        bypassConfirm.classList.add("hidden");
+        bypassConfirm.setAttribute("aria-hidden", "true");
+        const resolver = bypassConfirmResolver;
+        bypassConfirmResolver = null;
+        if (resolver) resolver(result);
+    }
+
+    function openBypassConfirm() {
+        if (!bypassConfirm) return Promise.resolve(true);
+        const plan = buyCurrentProduct?.plans?.[buySelectedPlanIndex] || {};
+        const amount = plan.resellerPrice ?? plan.price ?? "—";
+        bypassConfirmProduct.textContent = buyCurrentProduct?.name || "—";
+        bypassConfirmPackage.textContent = plan.label || `Package ${buySelectedPlanIndex + 1}`;
+        bypassConfirmAmount.textContent = String(amount).startsWith("₹") ? String(amount) : `₹${String(amount)}`;
+        bypassConfirm.classList.remove("hidden");
+        bypassConfirm.setAttribute("aria-hidden", "false");
+        requestAnimationFrame(() => bypassConfirmProceed?.focus());
+        return new Promise(resolve => { bypassConfirmResolver = resolve; });
+    }
+
+    bypassConfirmCancel?.addEventListener("click", () => closeBypassConfirm(false));
+    bypassConfirmProceed?.addEventListener("click", () => closeBypassConfirm(true));
+    bypassConfirm?.addEventListener("click", event => { if (event.target === bypassConfirm) closeBypassConfirm(false); });
 
     function clearBuyErrors() {
         buyError1.textContent = "";
@@ -1583,7 +1679,8 @@
             buyError2.textContent = "Please select a package.";
             return;
         }
-        if (!confirm("RESELLER PAYMENT BYPASS\n\nNo payment will be collected. A license/account will be issued immediately from reseller stock. Continue?")) return;
+        const confirmed = await openBypassConfirm();
+        if (!confirmed) return;
         buyError2.textContent = "";
         buyContinue2.disabled = true;
         buyContinue2.textContent = "GENERATING LICENSE...";
@@ -1610,8 +1707,16 @@
             buySuccess.hidden = false;
             const delivery = document.getElementById("buyEmailDeliveryStatus");
             if (delivery) delivery.textContent = data.emailStatus === "sent" ? "License details have been sent to the customer email." : "License generated. Email delivery is pending.";
+            // Bypass generation is a normal GMC success screen, not a Cashfree checkout.
+            // Do not enable .payment-only here because that mode intentionally shows
+            // the Cashfree iframe container and hides the success content.
+            buyQrWrap.style.display = "none";
+            if (cashfreeCheckoutContainer) {
+                cashfreeCheckoutContainer.classList.remove("active");
+                cashfreeCheckoutContainer.innerHTML = "";
+            }
+            buyModal.classList.remove("payment-only");
             showBuyStep(3);
-            buyModal.classList.add("payment-only");
         } catch (error) {
             buyError2.textContent = error.message || "Unable to generate reseller license.";
         } finally {
@@ -1849,6 +1954,11 @@
         if (event.target === buyModal) closeBuyModal();
     });
     document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && bypassConfirm && !bypassConfirm.classList.contains("hidden")) {
+            event.preventDefault();
+            closeBypassConfirm(false);
+            return;
+        }
         if (event.key === "Escape" && !buyModal.classList.contains("hidden")) closeBuyModal();
     });
 
